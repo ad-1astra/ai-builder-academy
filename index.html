@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2307111f%22/%3E%3Crect x=%2214%22 y=%2220%22 width=%2213%22 height=%2218%22 rx=%226%22 fill=%22%232fe0cf%22/%3E%3Crect x=%2237%22 y=%2220%22 width=%2213%22 height=%2218%22 rx=%226%22 fill=%22%232fe0cf%22/%3E%3Cpath d=%22M24 46q8 6 16 0%22 stroke=%22%23ff8a3d%22 stroke-width=%224%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Builder Academy</title>
+<meta name="description" content="Learn how a self-hosted AI companion is built, from the model stack and GPUs to training and fine-tuning a model, by playing 3D simulation games.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=B612+Mono&family=Chakra+Petch:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/academy.css">
+<style>
+  body { overflow-y: auto; background: var(--bg); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px 48px; }
+  .brand { display: flex; align-items: center; gap: 12px; padding-block: 18px; flex-wrap: wrap; }
+  .brand .word { font-family: var(--f-display); font-weight: 700; font-size: 1.35rem; }
+  .brand .grow { flex: 1; }
+  .hero { border: 1px solid var(--line); border-radius: 14px; padding: 28px; background: linear-gradient(135deg, #102540, var(--bg)); display: grid; gap: 12px; }
+  .hero h1 { font-family: var(--f-display); font-size: clamp(1.8rem, 5vw, 2.8rem); line-height: 1.05; }
+  .hero h1 em { color: var(--cyan); font-style: normal; }
+  .hero p { color: var(--dim); max-width: 60ch; }
+  .hero .ac-actions { justify-content: flex-start; }
+  h2.sec { font-family: var(--f-display); margin: 28px 0 10px; font-size: 1.25rem; }
+  .players { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .player { text-align: left; border: 1px solid var(--line); border-radius: var(--r); padding: 12px; background: var(--panel); color: var(--fg); font: inherit; cursor: pointer; display: grid; gap: 4px; }
+  .player.cur { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan) inset; }
+  .player small { font-family: var(--f-hud); color: var(--dim); }
+  .addp { display: flex; gap: 6px; align-items: center; border: 1px dashed var(--line); border-radius: var(--r); padding: 10px; }
+  .addp input { flex: 1; min-width: 0; background: var(--raised); border: 1px solid var(--line); border-radius: 8px; color: var(--fg); padding: 8px; font: inherit; }
+  .map { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+  .lesson { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; background: var(--panel); display: grid; gap: 8px; align-content: start; }
+  .lesson .n { font-family: var(--f-hud); font-size: 0.72rem; color: var(--magenta); letter-spacing: 0.12em; text-transform: uppercase; }
+  .lesson h3 { font-family: var(--f-display); font-size: 1.1rem; }
+  .lesson p { color: var(--dim); font-size: 0.92rem; }
+  .lesson a.g { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 8px 10px; border-radius: 8px; background: var(--raised); color: var(--fg); text-decoration: none; }
+  .lesson a.g:hover { outline: 1px solid var(--cyan); }
+  .lesson a.g b { color: var(--cyan); }
+  .lesson a.g small { grid-column: 1 / -1; color: var(--dim); }
+  .lesson a.test { color: var(--magenta); font-family: var(--f-hud); font-size: 0.85rem; text-decoration: none; }
+  .stars { color: var(--amber); letter-spacing: 1px; font-size: 0.85rem; }
+  .stars .off { color: var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <span class="word" id="title">AI Builder Academy</span>
+    <span class="grow"></span>
+    <a class="ac-btn ghost small" href="arena.html#all">Final exam</a>
+    <a class="ac-btn ghost small" href="teacher.html">Teacher guide</a>
+  </header>
+  <section class="hero">
+    <span class="mono dim" id="chip"></span>
+    <h1>Learn to build AI by <em>playing it.</em></h1>
+    <p id="tagline">Every section of the Self-Hosted AI Prototype plan, as a 3D simulation: route requests through the gateway, fit models on GPUs, animate the face, run a safe coding agent, then clean data, train a real tiny language model and fine-tune it. Win the missions, then prove it in the Test Arena.</p>
+    <div class="ac-actions"><a class="ac-btn" id="go" href="#">Play</a><a class="ac-btn ghost" href="arena.html#all">Quiz Duel</a></div>
+  </section>
+  <h2 class="sec">Players</h2>
+  <div class="players" id="players"></div>
+  <h2 class="sec">Course map</h2>
+  <div class="map" id="map"></div>
+</div>
+<script>window.AC_UNIT = 'Module'</script>
+<script src="js/core.js"></script>
+<script>
+/* Course config: one entry per lesson in the notes. `game` + `missions` must match the ids used in each game's AC.missions(). */
+const COURSE = {
+  title: 'AI Builder Academy',
+  lessons: [
+    { n: 1, title: 'Six parts, one gateway', summary: 'Brain, eyes, hands, artist, voice and face, joined by one gateway. Where open models stand today.',
+      games: [{ url: 'gateway.html#route', name: 'Gateway Control', game: 'gateway', missions: ['route', 'rush'], sub: 'Route requests · rush hour' }] },
+    { n: 2, title: 'The model stack', summary: 'Which open-weight model runs each part, and which licences let you sell the product.',
+      games: [{ url: 'gateway.html#licence', name: 'Gateway Control', game: 'gateway', missions: ['licence', 'stack'], sub: 'Licence check · boot the prototype stack' }] },
+    { n: 3, title: 'Hosting on GPUs', summary: 'Memory = parameters × bits ÷ 8. Which GPU fits which brain, and how big models are split across cards.',
+      games: [{ url: 'gpu.html', name: 'GPU Rack', game: 'gpu', missions: ['fit', 'match', 'scale'], sub: 'Fit the brain · rent the right GPU · the scale step' }] },
+    { n: 4, title: 'The animated face', summary: 'The face is animation code, not a model: springs that never snap, idle life, and emotion tags from the brain.',
+      games: [{ url: 'face.html', name: 'Face Lab', game: 'face', missions: ['spring', 'alive', 'tags'], sub: 'Never snap · life when idle · emotion tags' }] },
+    { n: 5, title: 'The 30-day plan and the safe agent', summary: 'Four weeks from brain online to demo. The agent loop, the sandbox and the approval rules.',
+      games: [
+        { url: 'gateway.html#plan', name: 'Gateway Control', game: 'gateway', missions: ['plan'], sub: 'Plan the 30 days' },
+        { url: 'agent.html', name: 'Agent Sandbox', game: 'agent', missions: ['loop', 'box', 'gate'], sub: 'Agent loop · build the sandbox · approval gate' },
+      ] },
+    { n: 6, title: 'How AI is made: data, tokens, pre-training', summary: 'Clean a dataset, train a tokenizer, then train a real tiny language model in your browser and watch the loss fall.',
+      games: [{ url: 'forge.html', name: 'Model Forge', game: 'forge', missions: ['clean', 'tokenize', 'pretrain'], sub: 'Clean the data · tokenizer · watch the loss fall' }] },
+    { n: 7, title: 'Fine-tuning and beyond', summary: 'SFT on clean examples, one change at a time on a small model first, DPO preference pairs, and the 30-question test set.',
+      games: [{ url: 'tune.html', name: 'Fine-Tune Lab', game: 'tune', missions: ['sft', 'experiment', 'dpo'], sub: 'Emotion tag SFT · experiments · DPO' }] },
+  ],
+};
+(function () {
+  const { h } = AC;
+  document.getElementById('title').textContent = COURSE.title;
+  document.title = COURSE.title;
+  const all = COURSE.lessons.flatMap((l) => l.games);
+  document.getElementById('chip').textContent = (() => { const n = new Set(all.map((g) => g.game)).size, m = all.reduce((s, g) => s + g.missions.length, 0); return '◆ ' + n + (n === 1 ? ' GAME · ' : ' GAMES · ') + m + (m === 1 ? ' MISSION' : ' MISSIONS') + ' · TESTS YOU PLAY'; })();
+  const starStr = (got, max) => h('span', { class: 'stars', html: '★'.repeat(Math.round((got / max) * 5)) + '<span class="off">' + '★'.repeat(5 - Math.round((got / max) * 5)) + '</span>', title: got + ' of ' + max + ' stars' });
+  const starsOf = (g) => g.missions.reduce((s, id) => s + AC.starsFor(g.game, id), 0);
+
+  function players() {
+    const el = document.getElementById('players');
+    el.innerHTML = '';
+    AC.data.pilots.forEach((p, i) => {
+      const got = all.reduce((s, g) => s + Object.keys(p.stars).filter((k) => k.startsWith(g.game + ':')).reduce((t, k) => t + p.stars[k], 0), 0);
+      el.appendChild(h('button', { type: 'button', class: 'player' + (i === (AC.data.cur | 0) ? ' cur' : ''), onclick: () => { AC.data.cur = i; AC.save(); render(); } },
+        h('small', {}, i === (AC.data.cur | 0) ? '▸ PLAYING NOW' : 'TAP TO PLAY AS'), h('b', {}, p.name), h('small', {}, p.xp + ' XP · ' + got + ' ★')));
+    });
+    const input = h('input', { type: 'text', placeholder: 'New player name', maxlength: '20', 'aria-label': 'New player name' });
+    const add = () => { const n = input.value.trim(); if (!n) return; AC.data.pilots.push(AC.blankPilot(n)); AC.data.cur = AC.data.pilots.length - 1; AC.save(); render(); };
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') add(); });
+    el.appendChild(h('div', { class: 'addp' }, input, h('button', { class: 'ac-btn small', type: 'button', onclick: add }, 'Add')));
+  }
+  function map() {
+    const el = document.getElementById('map');
+    el.innerHTML = '';
+    let next = null;
+    for (const l of COURSE.lessons) {
+      const card = h('div', { class: 'lesson' }, h('span', { class: 'n' }, AC.UNIT + ' ' + l.n), h('h3', {}, l.title), h('p', {}, l.summary));
+      for (const g of l.games) {
+        const got = starsOf(g), max = g.missions.length * 3;
+        if (!next && got < max) next = g;
+        card.appendChild(h('a', { class: 'g', href: g.url }, h('b', {}, g.name), starStr(got, max), g.sub ? h('small', {}, g.sub) : null));
+      }
+      card.appendChild(h('a', { class: 'test', href: 'arena.html#w' + l.n }, '▸ Take the ' + AC.UNIT + ' ' + l.n + ' test'));
+      el.appendChild(card);
+    }
+    const go = document.getElementById('go');
+    const g = next || all[0];
+    go.href = g.url;
+    go.textContent = 'Play: ' + g.name;
+  }
+  function render() { players(); map(); }
+  render();
+})();
+</script>
+</body>
+</html>

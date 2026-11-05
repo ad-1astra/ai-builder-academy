@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2307111f%22/%3E%3Crect x=%2214%22 y=%2220%22 width=%2213%22 height=%2218%22 rx=%226%22 fill=%22%232fe0cf%22/%3E%3Crect x=%2237%22 y=%2220%22 width=%2213%22 height=%2218%22 rx=%226%22 fill=%22%232fe0cf%22/%3E%3Cpath d=%22M24 46q8 6 16 0%22 stroke=%22%23ff8a3d%22 stroke-width=%224%22 fill=%22none%22 stroke-linecap=%22round%22/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=B612+Mono&family=Chakra+Petch:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/academy.css">
+<style>
+  body { overflow-y: auto; background: var(--bg); }
+  article { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 14px; }
+  h1 { font-family: var(--f-display); font-size: 2rem; }
+  h2 { font-family: var(--f-display); font-size: 1.3rem; margin-top: 18px; border-top: 1px solid var(--line); padding-top: 18px; }
+  h3 { font-size: 1.05rem; color: var(--cyan); }
+  p, li { color: var(--fg); max-width: 72ch; }
+  ul, ol { padding-left: 1.3em; display: grid; gap: 4px; }
+  .ans { border-left: 3px solid var(--green); padding-left: 12px; color: var(--dim); }
+  .next { border-left: 3px solid var(--brand); padding-left: 12px; }
+  .next b { color: var(--brand); }
+  .wrap-t { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; min-width: 560px; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--raised); }
+  code { font-family: var(--f-hud); font-size: 0.85em; color: var(--amber); }
+  @media print { body { background: #fff; } * { color: #000 !important; } .ac-btn { display: none; } }
+</style>
+</head>
+<body>
+<article>
+  <a class="ac-btn ghost small" href="index.html" style="justify-self: start">← Back to the hub</a>
+  <h1>Teacher and Learner Guide</h1>
+  <p>This academy turns the handout <b>"Self-Hosted AI Prototype: model stack, 30-day plan, and a path to learn how AI systems are made"</b> (November 2026) into 6 games and 20 missions across 7 modules. Each section below says which mission teaches what, how to run it, what to ask while people play, the answers, and the real-world step that comes next if you want to build the model yourself.</p>
+
+  <h2>Setting up the room</h2>
+  <ul>
+    <li>Works on laptops, tablets and phones. Laptops are best for Modules 5–7 (more reading).</li>
+    <li>On the hub, add one player per learner and tap a name before that learner plays. <b>Progress is saved in this browser only</b>, so a learner who changes device starts again; add them as a player on each device they use.</li>
+    <li>Pairs on one laptop: one plays, the other reads the HUD numbers aloud and predicts the result before each action. Swap every mission.</li>
+    <li>End every module with its test in the Test Arena. Quiz Duel works on one keyboard (A S D F vs H J K L) or one tablet.</li>
+    <li>The 3D engine loads from the internet the first time, with an offline copy in <code>lib/three.min.js</code>, so the site also runs from a USB stick or a local folder.</li>
+    <li>Suggested pace: one module per session of 45–60 minutes (about 20 minutes of play, 10 minutes of discussion, then the test).</li>
+  </ul>
+
+  <h2>Module 1 · Six parts, one gateway (handout sections 1 and 3)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Gateway Control · Route the Requests</td><td>Brain, eyes, hands, artist, voice, face; one gateway routes each request</td><td>Sends 12 requests (text, mic, camera, screenshot, file, emotion tag) to the right part; 10 right to pass</td></tr>
+    <tr><td>Gateway Control · Rush Hour</td><td>Each model's strengths (VibeVoice-ASR 60 min, Qwen3-VL OCR, CosyVoice2 150 ms, eye tracking on device)</td><td>Routes 16 harder requests against a timer (7 s falling to 4 s)</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Why build six parts instead of one giant model?</li>
+    <li>A camera frame arrives. When does it go to the eyes, and when to the face?</li>
+    <li>Where is the gap between open and closed models biggest?</li>
+  </ol>
+  <p class="ans">1: any part can be swapped for a better model later without rebuilding; everything speaks HTTP through one gateway. 2: "what is this?" goes to the eyes (vision model); "follow me" or "react" goes to the face (face detection runs on the device). 3: long, multi-step terminal work (Terminal-Bench 4.0: GLM 5.3 41.8% vs Claude Fable 5.1 57.9%); smallest for chat, vision and image generation.</p>
+  <p class="next"><b>Next in the real world:</b> sketch your own gateway diagram. Every box is one HTTP endpoint; write which model you would put in each.</p>
+
+  <h2>Module 2 · The model stack (handout sections 2 and 7)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Gateway Control · Licence Check</td><td>Apache 2.0 / MIT = free for commercial use; custom = read the terms; FLUX.2 [dev] = non-commercial</td><td>Sorts 14 models into three licence groups; 11 right to pass</td></tr>
+    <tr><td>Gateway Control · Boot the Prototype Stack</td><td>Month-one picks must fit one or two GPUs and allow commercial use</td><td>Picks a model per part, boots the stack, fixes the parts that turn red</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Why can one Qwen3.8-27B deployment serve two parts?</li>
+    <li>GLM-5.3-Flash is MIT. Why is it still a bad month-one brain?</li>
+    <li>Why is "Kokoro only" not a complete voice?</li>
+  </ol>
+  <p class="ans">1: it handles text and vision, so it is both brain and eyes. 2: it needs 3–4 × 80GB GPUs; it is the scale step after the prototype proves its value. 3: Kokoro is text to speech only; you also need speech to text (VibeVoice-ASR or Whisper).</p>
+  <p class="next"><b>Next in the real world:</b> open the model card of each pick and confirm its size and licence there. The handout says its numbers come from third-party summaries and must be verified.</p>
+
+  <h2>Module 3 · Hosting on GPUs (handout section 3)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>GPU Rack · Fit the Brain on One Card</td><td>Weights = parameters × bits ÷ 8; Qwen3.8-27B at 4-bit ≈ 16–19GB on a 24GB card</td><td>Chooses 16/8/4-bit and loads; out-of-memory if it overflows (3 stars on the first try)</td></tr>
+    <tr><td>GPU Rack · Rent the Right GPU</td><td>The GPU table: 24GB, 48GB L40S, 80GB H100, 3–4 × 80GB, 8 × H200</td><td>Puts 8 models on the smallest GPU that fits each</td></tr>
+    <tr><td>GPU Rack · The Scale Step</td><td>GLM-5.3-Flash: 320B total, 18B active, 162–210GB at 4-bit</td><td>Chooses the fewest 80GB cards (3) for long context</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Before pressing Load: how many GB is 27B at 8-bit?</li>
+    <li>Why does a 70B model fit a 48GB card at 4-bit but need an 80GB card at FP8?</li>
+    <li>GLM-5.3-Flash only uses 18B parameters per token. Why can it not run on one 24GB card?</li>
+  </ol>
+  <p class="ans">1: 27 × 8 ÷ 8 = 27GB, more than 24. 2: 70 × 4 ÷ 8 = 35GB (about 36–40 with context) vs 70 × 8 ÷ 8 = 70GB (about 72). 3: all 320B parameters must be in memory: 320 × 4 ÷ 8 = 160GB plus context; active parameters only make it faster.</p>
+  <p class="next"><b>Next in the real world:</b> rent one 24GB GPU by the hour, install vLLM and serve Qwen3.8-27B at 4-bit (Week 1 of the plan). Test memory with your real prompts before renting anything bigger.</p>
+
+  <h2>Module 4 · The animated face (handout section 4)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Face Lab · Never Snap</td><td>Every value moves with spring physics, slight overshoot, never a snap</td><td>Tunes stiffness and damping until a neutral → happy change has 3–15% overshoot and settles within 0.5 s</td></tr>
+    <tr><td>Face Lab · Life When Idle</td><td>Random blinks, tiny eye drifts, slow breathing glow; idle matters more than big expressions</td><td>Sets the three idle behaviours and passes an 8-second idle test</td></tr>
+    <tr><td>Face Lab · Emotion Tags</td><td>The brain returns a tag with every reply; six expressions; intensity 0–1</td><td>Writes the tag for 7 moments and watches the face blend toward it</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>The graph wobbles three times before settling. Which slider do you move, and which way?</li>
+    <li>Why does a blink every exactly 3 seconds look robotic?</li>
+    <li>"ok... fine, I guess": which emotion and what intensity?</li>
+  </ol>
+  <p class="ans">1: more damping (c). 2: people notice the regular rhythm; real blinks have random timing. 3: happy, low intensity (0.4 or less), looking at the user.</p>
+  <p class="next"><b>Next in the real world:</b> build the face in a browser with Canvas and your own springs (exactly what this game does: open <code>js/face.js</code>), or with Rive or Lottie. It needs no GPU.</p>
+
+  <h2>Module 5 · The 30-day plan and the safe agent (handout sections 2.3 and 5)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Gateway Control · Plan the 30 Days</td><td>Week 1 brain online · Week 2 eyes and hands · Week 3 artist, voice, face v1 · Week 4 join, test, show</td><td>Sorts 14 tasks into the four weeks</td></tr>
+    <tr><td>Agent Sandbox · The Agent Loop</td><td>Model + agent program; plan → run command → read output → fix</td><td>Plays the agent and fixes <code>return a + b + 1</code> without cheating on the test</td></tr>
+    <tr><td>Agent Sandbox · Build the Sandbox</td><td>Throwaway container, no root, locked folder, test keys, command log, approval for risky commands</td><td>Configures the sandbox so a 13-event chaos test is 100% contained and the agent is still ≥ 75% useful</td></tr>
+    <tr><td>Agent Sandbox · The Approval Gate</td><td>Approval for delete, overwrite, network upload, package install, deploy</td><td>Lets 8 safe commands run and stops 10 risky ones as they arrive</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Why is "edit the test to expect 6" a mistake when it makes the tests pass?</li>
+    <li>If every file read needs your approval, is the agent safer?</li>
+    <li>Why is <code>git reset --hard</code> risky but <code>git diff</code> safe?</li>
+  </ol>
+  <p class="ans">1: the bug is still in the code; the test was changed to hide it. 2: no safer, just slower: reads cannot damage anything. 3: reset throws away changes (an overwrite); diff only reads.</p>
+  <p class="next"><b>Next in the real world:</b> install an open terminal agent (OpenCode, Aider or Qwen Code), point it at your own endpoint, and run it in a Docker container with no root, a copy of the project and test keys only.</p>
+
+  <h2>Module 6 · How AI is made: data, tokens, pre-training (handout section 6, stages 1–3)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Model Forge · Clean the Data</td><td>Collect and clean; remove duplicates and junk</td><td>Keeps 14 clean samples and drops 7 junk and 5 duplicates (spotted by hash)</td></tr>
+    <tr><td>Model Forge · Train a Tokenizer</td><td>Text is cut into pieces the model can count</td><td>Performs 6 byte-pair merges by counting pairs; 146 letters → 84 tokens</td></tr>
+    <tr><td>Model Forge · Watch the Loss Fall</td><td>Pre-training: a model learns to predict the next token; watch the loss fall</td><td>Trains a <b>real</b> 2,739-parameter character model in the browser; picks a learning rate that reaches loss ≤ 1.8 in 400 steps</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Two samples have the same hash. What does that tell you?</li>
+    <li>Why is "in" a better first merge than "t + r"?</li>
+    <li>Learning rate 0.01 gives a flat curve; 5 makes it explode. What would you try next?</li>
+  </ol>
+  <p class="ans">1: they are the same text, a duplicate. 2: it appears 15 times (5 + 2 + 2 × 4) vs 11, so merging it saves more tokens. 3: something in between, one change at a time: about 0.7–1.5 gives 3 stars (tuned with the same model in a script: 0.25–2 passes, 3 or more explodes).</p>
+  <p class="next"><b>Next in the real world:</b> train a small GPT-style model from scratch on one GPU (a nanoGPT-style project) on your own clean dataset, and train a small tokenizer on the same data to see how your words split.</p>
+
+  <h2>Module 7 · Fine-tuning and beyond (handout section 6, stages 4–8)</h2>
+  <div class="wrap-t"><table>
+    <tr><th>Mission</th><th>Concept from the notes</th><th>What the learner does</th></tr>
+    <tr><td>Fine-Tune Lab · Teach the Emotion Tag</td><td>SFT; first project: the emotion tag in the right JSON shape; quality beats quantity</td><td>Curates 22 examples (12 good, 10 flawed), then decides whether to add 3,000 scraped logs; needs ≥ 94% valid tags</td></tr>
+    <tr><td>Fine-Tune Lab · One Change at a Time</td><td>Change one thing at a time; start on about 8B; keep a notebook; the 30-question test set</td><td>Finds a LoRA recipe on 8B (1 h a run), then repeats it on 27B (4 h) to score ≥ 28/30 within 16 GPU hours</td></tr>
+    <tr><td>Fine-Tune Lab · Prefer the Better Answer</td><td>DPO with pairs of good and bad answers from your own test failures</td><td>Labels 12 chosen/rejected pairs; the model must prefer good answers ≥ 83%</td></tr>
+  </table></div>
+  <h3>Ask while they play</h3>
+  <ol>
+    <li>Adding 3,000 examples made the score worse. How can more data hurt?</li>
+    <li>You changed data and learning rate together and the score went up 8. What helped?</li>
+    <li>Where do DPO pairs come from?</li>
+  </ol>
+  <p class="ans">1: about 40% of them had bad or missing tags, so the model learned to skip or break the format. 2: you cannot tell; that is why you change one thing at a time. 3: your own test failures: the answer the model gave (rejected) and the answer it should have given (chosen).</p>
+  <p class="next"><b>Next in the real world:</b> run LoRA or QLoRA on an 8B model with Hugging Face Transformers + TRL, Unsloth or Axolotl, using a few hundred clean emotion-tag examples. Re-run your 30-question test set before and after. Then quantise the result to 4-bit and serve it with vLLM behind your gateway.</p>
+
+  <h2>Where the numbers come from</h2>
+  <p>Model sizes, GPU fits, licences, benchmark scores and the 30-day plan are taken from the handout. Its own warning applies: they come from third-party summaries dated 2026 and should be confirmed on each model's official page. Two GPU-tier values are marked "estimate" in the game (GLM-5.3 ≈ 410GB and MiMo-V2.6-Pro ≈ 560GB at 4-bit), worked out with the same parameters × bits ÷ 8 rule. The scores in the Fine-Tune Lab are a teaching simulation; the language model in Model Forge is real.</p>
+</article>
+</body>
+</html>
