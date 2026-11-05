@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: CHANGE-ME-academy
+    name: ai-builder-academy
     runtime: static
     buildCommand: echo "Static site, nothing to build"
     staticPublishPath: .
